@@ -6,8 +6,13 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+// Configuração do CORS para liberar seu domínio frontend
+const corsOptions = {
+    origin: 'https://alencarpereira.github.io',
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Conexão com MongoDB
@@ -46,7 +51,7 @@ app.post('/api/scores', async (req, res) => {
 app.get('/api/scores/top5', async (req, res) => {
     try {
         const topScores = await Score.find()
-            .sort({ pontuacao: -1, criadoEm: 1 }) // maior pontuação primeiro, se empate, mais antigo antes
+            .sort({ pontuacao: -1, criadoEm: 1 })
             .limit(5);
 
         res.json(topScores);
@@ -56,7 +61,7 @@ app.get('/api/scores/top5', async (req, res) => {
     }
 });
 
-// Teste de rota
+// Rota teste
 app.get('/', (req, res) => {
     res.send('API rodando. Use /api/scores e /api/scores/top5');
 });
@@ -64,6 +69,7 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
+
 
 
 
